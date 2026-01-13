@@ -16,24 +16,30 @@ document.addEventListener('DOMContentLoaded', () => {
     loadProfessorPage();
 });
 
-function loadProfessorPage() {
-    const professor = getProfessorData(currentProfessorId);
+async function loadProfessorPage() {
+    const professor = await getProfessorData(currentProfessorId);
+
+    if (!professor) {
+        alert('교수님 데이터를 불러올 수 없습니다.');
+        window.location.href = 'index.html';
+        return;
+    }
 
     // Set professor name
     document.getElementById('professor-name').textContent = professor.name + ' 교수님';
 
     // Update budget summary
-    updateBudgetSummary();
+    await updateBudgetSummary();
 
     // Load all histories
-    loadMeetingPreHistory();
+    await loadMeetingPreHistory();
     loadMeetingHistory();
     loadActivityHistory();
     loadMaterialsHistory();
 }
 
-function updateBudgetSummary() {
-    const totals = calculateTotals(currentProfessorId);
+async function updateBudgetSummary() {
+    const totals = await calculateTotals(currentProfessorId);
 
     document.getElementById('total-budget').textContent = formatCurrency(totals.totalBudget);
     document.getElementById('total-spent').textContent = formatCurrency(totals.totalSpent);
