@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>연구비 관리 - 교수님 상세</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="header-nav">
+                <button onclick="goHome()" class="btn-back">← 메인으로</button>
+                <h1 id="professor-name">교수님</h1>
+            </div>
+        </header>
+
+        <!-- Budget Summary Section -->
+        <section class="budget-summary">
+            <div class="summary-card">
+                <div class="summary-item">
+                    <span class="summary-label">총 배정 예산</span>
+                    <span class="summary-value" id="total-budget">₩0</span>
+                    <button onclick="editBudget()" class="btn-edit">수정</button>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">총 사용 금액</span>
+                    <span class="summary-value spent" id="total-spent">₩0</span>
+                </div>
+                <div class="summary-item highlight">
+                    <span class="summary-label">남은 예산</span>
+                    <span class="summary-value" id="remaining-budget">₩0</span>
+                </div>
+            </div>
+
+            <!-- 연구활동비 예산 -->
+            <div class="category-summary">
+                <h3 style="margin-bottom: 0.5rem; color: var(--primary-color);">연구활동비 예산</h3>
+                <div class="category-item">
+                    <span class="category-label">총 연구활동비 예산</span>
+                    <span class="category-value" id="activity-budget-total">₩0</span>
+                </div>
+                <div class="category-item">
+                    <span class="category-label">연구활동비 사용금액</span>
+                    <span class="category-value spent" id="activity-budget-spent">₩0</span>
+                </div>
+                <div class="category-item">
+                    <span class="category-label">연구활동비 남은예산</span>
+                    <span class="category-value" id="activity-budget-remaining">₩0</span>
+                </div>
+            </div>
+
+            <!-- 연구재료비 예산 -->
+            <div class="category-summary">
+                <h3 style="margin-bottom: 0.5rem; color: var(--primary-color);">연구재료비 예산</h3>
+                <div class="category-item">
+                    <span class="category-label">총 연구재료비 예산</span>
+                    <span class="category-value" id="materials-budget-total">₩0</span>
+                </div>
+                <div class="category-item">
+                    <span class="category-label">연구재료비 사용금액</span>
+                    <span class="category-value spent" id="materials-budget-spent">₩0</span>
+                </div>
+                <div class="category-item">
+                    <span class="category-label">연구재료비 남은예산</span>
+                    <span class="category-value" id="materials-budget-remaining">₩0</span>
+                </div>
+            </div>
+
+            <!-- 카테고리별 상세 -->
+            <div class="category-summary">
+                <h3 style="margin-bottom: 0.5rem; color: var(--text-secondary);">카테고리별 상세</h3>
+                <div class="category-item">
+                    <span class="category-label">회의비</span>
+                    <span class="category-value" id="meeting-total">₩0</span>
+                </div>
+                <div class="category-item">
+                    <span class="category-label">연구활동비(회의비 외)</span>
+                    <span class="category-value" id="activity-total">₩0</span>
+                </div>
+                <div class="category-item">
+                    <span class="category-label">연구재료비</span>
+                    <span class="category-value" id="materials-total">₩0</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('meeting-pre')">회의비 사전신청</button>
+            <button class="tab" onclick="switchTab('activity')">연구활동비</button>
+            <button class="tab" onclick="switchTab('materials')">연구재료비</button>
+        </div>
+
+        <!-- Tab Content -->
+        <!-- Meeting Pre-Application -->
+        <div id="meeting-pre-content" class="tab-content active">
+            <div class="manual-section">
+                <h3>📋 회의비 사전신청 서식</h3>
+                <div class="manual-placeholder"
+                    style="padding: 1.5rem; background: #f8f9fa; border-radius: 8px; text-align: center;">
+                    <p style="margin-bottom: 1rem; color: #666;">아래 서식을 다운로드하여 작성하세요</p>
+                    <a href="assets/K-AI 회의비 사전승인 신청서_yymmdd.docx" download class="btn-primary"
+                        style="display: inline-block; padding: 0.75rem 1.5rem; text-decoration: none;">
+                        📄 K-AI 회의비 사전승인 신청서_yymmdd.docx 다운로드
+                    </a>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>회의비 사전신청 파일 업로드</h3>
+                <form id="meeting-pre-form" onsubmit="saveMeetingPre(event)">
+                    <div class="form-group">
+                        <label>첨부파일 *</label>
+                        <input type="file" name="file" id="meeting-pre-file" multiple required>
+                    </div>
+
+                    <button type="submit" class="btn-submit">저장</button>
+                </form>
+            </div>
+
+            <div class="history-section">
+                <h3>회의비 사전신청 내역</h3>
+                <div id="meeting-pre-history" class="history-list"></div>
+            </div>
+        </div>
+
+        <div id="activity-content" class="tab-content">
+            <div class="form-section">
+                <h3>연구활동비 입력</h3>
+                <form id="activity-form" onsubmit="saveActivity(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>구분 *</label>
+                            <select name="category" required>
+                                <option value="">선택하세요</option>
+                                <option value="1.지식재산 창출 활동비">1.지식재산 창출 활동비</option>
+                                <option value="2.외부 전문기술 활용비">2.외부 전문기술 활용비</option>
+                                <option value="3.회의비">3.회의비</option>
+                                <option value="4.출장비">4.출장비</option>
+                                <option value="5.소프트웨어 활용비">5.소프트웨어 활용비</option>
+                                <option value="6.연구실 운영비">6.연구실 운영비</option>
+                                <option value="7.연구인력 지원비">7.연구인력 지원비</option>
+                                <option value="8.해외 연구자 유치 지원비">8.해외 연구자 유치 지원비</option>
+                                <option value="9.종합사업관리비">9.종합사업관리비</option>
+                                <option value="10.그밖의 비용">10.그밖의 비용</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>사용내역 *</label>
+                            <input type="text" name="description" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>사용카드 *</label>
+                            <input type="text" name="card" required>
+                        </div>
+                        <div class="form-group">
+                            <label>결제일 *</label>
+                            <input type="date" name="paymentDate" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>총금액 *</label>
+                            <input type="number" name="totalAmount" required min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>과세금액</label>
+                            <input type="number" name="taxableAmount" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>부가세</label>
+                            <input type="number" name="vat" min="0">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-submit">저장</button>
+                </form>
+            </div>
+
+            <div class="history-section">
+                <h3>연구활동비 내역</h3>
+                <div id="activity-history" class="history-list"></div>
+            </div>
+        </div>
+
+        <div id="materials-content" class="tab-content">
+            <div class="form-section">
+                <h3>연구재료비 입력</h3>
+                <form id="materials-form" onsubmit="saveMaterials(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>구분 *</label>
+                            <select name="category" required>
+                                <option value="">선택하세요</option>
+                                <option value="1.연구재료 구입비">1.연구재료 구입비</option>
+                                <option value="2.연구개발과제 관리비">2.연구개발과제 관리비</option>
+                                <option value="3.연구재료 제작비">3.연구재료 제작비</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>사용내역 *</label>
+                            <input type="text" name="description" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>사용카드 *</label>
+                            <input type="text" name="card" required>
+                        </div>
+                        <div class="form-group">
+                            <label>결제일 *</label>
+                            <input type="date" name="paymentDate" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>단가 *</label>
+                            <input type="number" name="unitPrice" id="unitPrice" required min="0"
+                                oninput="calculateTotal()">
+                        </div>
+                        <div class="form-group">
+                            <label>개수 *</label>
+                            <input type="number" name="quantity" id="quantity" required min="1"
+                                oninput="calculateTotal()">
+                        </div>
+                        <div class="form-group">
+                            <label>총금액 (자동계산)</label>
+                            <input type="number" name="totalAmount" id="totalAmount" readonly>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>과세금액</label>
+                            <input type="number" name="taxableAmount" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>부가세</label>
+                            <input type="number" name="vat" min="0">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-submit">저장</button>
+                </form>
+            </div>
+
+            <div class="history-section">
+                <h3>연구재료비 내역</h3>
+                <div id="materials-history" class="history-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Google API Libraries -->
+    <script src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
+    <script src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
+
+    <!-- Application Scripts -->
+    <script src="js/config.js"></script>
+    <script src="js/google-api.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/professor.js"></script>
+    <script src="js/pre-application.js"></script>
+</body>
+
+</html>

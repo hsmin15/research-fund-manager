@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>연구비 관리 시스템</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <!-- Authentication Section -->
+    <div id="auth-section" class="auth-container">
+        <div class="auth-card">
+            <h1>연구비 관리 시스템</h1>
+            <p class="subtitle">Google 계정으로 로그인하세요</p>
+            <button id="authorize-button" class="btn-primary" onclick="handleAuthClick()" disabled>
+                Google로 로그인
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content (hidden until authorized) -->
+    <div id="main-content" class="container hidden">
+        <header>
+            <h1>연구비 관리 시스템</h1>
+            <p class="subtitle">교수님별 연구비 사용 현황 관리</p>
+            <button id="signout-button" class="btn-secondary" onclick="handleSignoutClick()" disabled>
+                로그아웃
+            </button>
+        </header>
+
+        <main class="professor-grid">
+            <div class="professor-card" onclick="goToProfessor('choi')">
+                <div class="card-header">
+                    <h2>최준정 교수님</h2>
+                </div>
+                <div class="card-body">
+                    <div class="budget-info">
+                        <div class="budget-item">
+                            <span class="label">총 배정 예산</span>
+                            <span class="value" id="choi-total">₩0</span>
+                        </div>
+                        <div class="budget-item">
+                            <span class="label">총 사용 금액</span>
+                            <span class="value spent" id="choi-spent">₩0</span>
+                        </div>
+                        <div class="budget-item highlight">
+                            <span class="label">남은 예산</span>
+                            <span class="value" id="choi-remaining">₩0</span>
+                        </div>
+                        <hr style="margin: 1rem 0; border: none; border-top: 1px solid #e0e0e0;">
+                        <div class="budget-item">
+                            <span class="label">연구활동비 남은예산</span>
+                            <span class="value" id="choi-activity-remaining">₩0</span>
+                        </div>
+                        <div class="budget-item">
+                            <span class="label">연구재료비 남은예산</span>
+                            <span class="value" id="choi-materials-remaining">₩0</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button class="btn-primary">관리하기 →</button>
+                </div>
+            </div>
+
+            <div class="professor-card" onclick="goToProfessor('lim')">
+                <div class="card-header">
+                    <h2>임선민 교수님</h2>
+                </div>
+                <div class="card-body">
+                    <div class="budget-info">
+                        <div class="budget-item">
+                            <span class="label">총 배정 예산</span>
+                            <span class="value" id="lim-total">₩0</span>
+                        </div>
+                        <div class="budget-item">
+                            <span class="label">총 사용 금액</span>
+                            <span class="value spent" id="lim-spent">₩0</span>
+                        </div>
+                        <div class="budget-item highlight">
+                            <span class="label">남은 예산</span>
+                            <span class="value" id="lim-remaining">₩0</span>
+                        </div>
+                        <hr style="margin: 1rem 0; border: none; border-top: 1px solid #e0e0e0;">
+                        <div class="budget-item">
+                            <span class="label">연구활동비 남은예산</span>
+                            <span class="value" id="lim-activity-remaining">₩0</span>
+                        </div>
+                        <div class="budget-item">
+                            <span class="label">연구재료비 남은예산</span>
+                            <span class="value" id="lim-materials-remaining">₩0</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button class="btn-primary">관리하기 →</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Google API Libraries -->
+    <script src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
+    <script src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
+
+    <!-- Application Scripts -->
+    <script src="js/config.js"></script>
+    <script src="js/google-api.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>
