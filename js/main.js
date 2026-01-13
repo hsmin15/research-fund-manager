@@ -1,26 +1,38 @@
 // Main page logic
-document.addEventListener('DOMContentLoaded', () => {
-    loadProfessorCards();
-});
+// Don't load data immediately - wait for Google authentication
+// loadProfessorCards() will be called from google-api.js after login
 
-function loadProfessorCards() {
-    const data = getData();
+async function loadProfessorCards() {
+    try {
+        const data = await getData();
 
-    // Update Choi professor card
-    updateCard('choi', data.professors.choi);
+        if (!data || !data.professors) {
+            console.log('No data available yet');
+            return;
+        }
 
-    // Update Lim professor card
-    updateCard('lim', data.professors.lim);
+        // Update Choi professor card
+        await updateCard('choi', data.professors.choi);
+
+        // Update Lim professor card
+        await updateCard('lim', data.professors.lim);
+    } catch (error) {
+        console.error('Error loading professor cards:', error);
+    }
 }
 
-function updateCard(professorId, professorData) {
-    const totals = calculateTotals(professorId);
+async function updateCard(professorId, professorData) {
+    try {
+        const totals = await calculateTotals(professorId);
 
-    document.getElementById(`${professorId}-total`).textContent = formatCurrency(totals.totalBudget);
-    document.getElementById(`${professorId}-spent`).textContent = formatCurrency(totals.totalSpent);
-    document.getElementById(`${professorId}-remaining`).textContent = formatCurrency(totals.remaining);
-    document.getElementById(`${professorId}-activity-remaining`).textContent = formatCurrency(totals.activityRemaining);
-    document.getElementById(`${professorId}-materials-remaining`).textContent = formatCurrency(totals.materialsRemaining);
+        document.getElementById(`${professorId}-total`).textContent = formatCurrency(totals.totalBudget);
+        document.getElementById(`${professorId}-spent`).textContent = formatCurrency(totals.totalSpent);
+        document.getElementById(`${professorId}-remaining`).textContent = formatCurrency(totals.remaining);
+        document.getElementById(`${professorId}-activity-remaining`).textContent = formatCurrency(totals.activityRemaining);
+        document.getElementById(`${professorId}-materials-remaining`).textContent = formatCurrency(totals.materialsRemaining);
+    } catch (error) {
+        console.error('Error updating card:', error);
+    }
 }
 
 function goToProfessor(professorId) {
