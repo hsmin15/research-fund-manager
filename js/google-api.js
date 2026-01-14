@@ -263,5 +263,13 @@ async function uploadFileToDrive(file) {
 
 // Check if user is authorized
 function isAuthorized() {
-    return accessToken !== null;
+    try {
+        const token = gapi?.client?.getToken();
+        const authorized = token !== null && token !== undefined;
+        console.log('[DEBUG] isAuthorized check:', { token: !!token, authorized });
+        return authorized;
+    } catch (error) {
+        console.log('[DEBUG] isAuthorized error:', error);
+        return false;
+    }
 }
