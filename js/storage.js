@@ -126,19 +126,41 @@ function saveData(data) {
 
 // Get professor data
 async function getProfessorData(professorId) {
+    console.log('[DEBUG] Getting professor data for:', professorId);
     const data = await getData();
+    console.log('[DEBUG] Data received:', data);
+
+    if (!data || !data.professors) {
+        console.error('[ERROR] No data or professors found');
+        return null;
+    }
+
     const professor = data.professors[professorId];
+    console.log('[DEBUG] Professor found:', professor);
+
+    if (!professor) {
+        console.error('[ERROR] Professor not found for ID:', professorId);
+        return null;
+    }
 
     if (!isAuthorized()) {
+        console.log('[DEBUG] Not authorized, returning local data');
         return professor;
     }
 
+    console.log('[DEBUG] Loading expenses from Sheets...');
     // Load expenses from Sheets
     const [meetingPreData, activityData, materialsData] = await Promise.all([
         readSheetData('회의비사전신청', 'A2:E1000'),
         readSheetData('연구활동비', 'A2:J1000'),
         readSheetData('연구재료비', 'A2:L1000')
     ]);
+
+    console.log('[DEBUG] Sheets data loaded:', {
+        meetingPre: meetingPreData.length,
+        activity: activityData.length,
+        materials: materialsData.length
+    });
 
     // Parse meeting pre expenses
     professor.expenses.meetingPre = meetingPreData
