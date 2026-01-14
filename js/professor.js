@@ -13,7 +13,8 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    loadProfessorPage();
+    // Don't load immediately - wait for Google API to be ready
+    // loadProfessorPage() will be called from google-api.js after authentication
 });
 
 async function loadProfessorPage() {
