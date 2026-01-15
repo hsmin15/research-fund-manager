@@ -31,7 +31,11 @@ function gisLoaded() {
 
 function maybeEnableButtons() {
     if (gapiInited && gisInited) {
-        document.getElementById('authorize-button')?.removeAttribute('disabled');
+        const authButton = document.getElementById('authorize-button');
+        if (authButton) {
+            authButton.removeAttribute('disabled');
+            authButton.style.display = 'block';
+        }
     }
 }
 
@@ -42,10 +46,20 @@ function handleAuthClick() {
             throw (resp);
         }
         accessToken = gapi.client.getToken().access_token;
-        document.getElementById('signout-button')?.removeAttribute('disabled');
-        document.getElementById('authorize-button')?.setAttribute('disabled', 'true');
 
-        // Hide auth section, show main content
+        const signoutButton = document.getElementById('signout-button');
+        const authorizeButton = document.getElementById('authorize-button');
+
+        if (signoutButton) {
+            signoutButton.removeAttribute('disabled');
+            signoutButton.style.display = 'block';
+        }
+        if (authorizeButton) {
+            authorizeButton.setAttribute('disabled', 'true');
+            authorizeButton.style.display = 'none';
+        }
+
+        // Hide auth section, show main content (for index page)
         document.getElementById('auth-section')?.classList.add('hidden');
         document.getElementById('main-content')?.classList.remove('hidden');
 

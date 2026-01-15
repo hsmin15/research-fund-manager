@@ -14,6 +14,12 @@
             <div class="header-nav">
                 <button onclick="goHome()" class="btn-back">← 메인으로</button>
                 <h1 id="professor-name">교수님</h1>
+                <div style="display: flex; gap: 0.5rem;">
+                    <button id="authorize-button" class="btn-primary" onclick="handleAuthClick()" disabled
+                        style="display: none;">Google 로그인</button>
+                    <button id="signout-button" class="btn-secondary" onclick="handleSignoutClick()" disabled
+                        style="display: none;">로그아웃</button>
+                </div>
             </div>
         </header>
 
