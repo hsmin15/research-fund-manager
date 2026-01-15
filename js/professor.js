@@ -34,7 +34,6 @@ async function loadProfessorPage() {
 
     // Load all histories
     await loadMeetingPreHistory();
-    loadMeetingHistory();
     loadActivityHistory();
     loadMaterialsHistory();
 }
@@ -90,14 +89,24 @@ function editBudget() {
 }
 
 // Tab switching
-function switchTab(tabName) {
+function switchTab(tabName, evt) {
     currentTab = tabName;
 
     // Update tab buttons
     document.querySelectorAll('.tab').forEach(tab => {
         tab.classList.remove('active');
     });
-    event.target.classList.add('active');
+    if (evt && evt.target) {
+        evt.target.classList.add('active');
+    } else {
+        // Find and activate the correct tab button by matching tabName
+        const tabs = document.querySelectorAll('.tab');
+        tabs.forEach(tab => {
+            if (tab.getAttribute('onclick').includes(tabName)) {
+                tab.classList.add('active');
+            }
+        });
+    }
 
     // Update tab content
     document.querySelectorAll('.tab-content').forEach(content => {
