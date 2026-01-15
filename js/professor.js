@@ -35,8 +35,8 @@ async function loadProfessorPage() {
     // Load all histories
     await loadMeetingPreHistory();
     loadMeetingHistory();
-    loadActivityHistory();
-    loadMaterialsHistory();
+    await loadActivityHistory();
+    await loadMaterialsHistory();
 }
 
 async function updateBudgetSummary() {
@@ -136,14 +136,14 @@ async function saveMeeting(event) {
     form.reset();
 
     // Reload
-    loadMeetingHistory();
-    updateBudgetSummary();
+    await loadMeetingHistory();
+    await updateBudgetSummary();
 
     alert('회의비가 저장되었습니다.');
 }
 
-function loadMeetingHistory() {
-    const professor = getProfessorData(currentProfessorId);
+async function loadMeetingHistory() {
+    const professor = await getProfessorData(currentProfessorId);
     const expenses = professor.expenses.meeting;
     const container = document.getElementById('meeting-history');
 
@@ -181,11 +181,11 @@ function loadMeetingHistory() {
     `).join('');
 }
 
-function deleteMeetingExpense(expenseId) {
+async function deleteMeetingExpense(expenseId) {
     if (confirm('이 항목을 삭제하시겠습니까?')) {
-        deleteExpense(currentProfessorId, 'meeting', expenseId);
-        loadMeetingHistory();
-        updateBudgetSummary();
+        await deleteExpense(currentProfessorId, 'meeting', expenseId);
+        await loadMeetingHistory();
+        await updateBudgetSummary();
     }
 }
 
@@ -211,14 +211,14 @@ async function saveActivity(event) {
     form.reset();
 
     // Reload
-    loadActivityHistory();
-    updateBudgetSummary();
+    await loadActivityHistory();
+    await updateBudgetSummary();
 
     alert('연구활동비가 저장되었습니다.');
 }
 
-function loadActivityHistory() {
-    const professor = getProfessorData(currentProfessorId);
+async function loadActivityHistory() {
+    const professor = await getProfessorData(currentProfessorId);
     const expenses = professor.expenses.activity;
     const container = document.getElementById('activity-history');
 
@@ -244,11 +244,11 @@ function loadActivityHistory() {
     `).join('');
 }
 
-function deleteActivityExpense(expenseId) {
+async function deleteActivityExpense(expenseId) {
     if (confirm('이 항목을 삭제하시겠습니까?')) {
-        deleteExpense(currentProfessorId, 'activity', expenseId);
-        loadActivityHistory();
-        updateBudgetSummary();
+        await deleteExpense(currentProfessorId, 'activity', expenseId);
+        await loadActivityHistory();
+        await updateBudgetSummary();
     }
 }
 
@@ -290,14 +290,14 @@ async function saveMaterials(event) {
     form.reset();
 
     // Reload
-    loadMaterialsHistory();
-    updateBudgetSummary();
+    await loadMaterialsHistory();
+    await updateBudgetSummary();
 
     alert('연구재료비가 저장되었습니다.');
 }
 
-function loadMaterialsHistory() {
-    const professor = getProfessorData(currentProfessorId);
+async function loadMaterialsHistory() {
+    const professor = await getProfessorData(currentProfessorId);
     const expenses = professor.expenses.materials;
     const container = document.getElementById('materials-history');
 
@@ -336,10 +336,10 @@ function loadMaterialsHistory() {
     `).join('');
 }
 
-function deleteMaterialsExpense(expenseId) {
+async function deleteMaterialsExpense(expenseId) {
     if (confirm('이 항목을 삭제하시겠습니까?')) {
-        deleteExpense(currentProfessorId, 'materials', expenseId);
-        loadMaterialsHistory();
-        updateBudgetSummary();
+        await deleteExpense(currentProfessorId, 'materials', expenseId);
+        await loadMaterialsHistory();
+        await updateBudgetSummary();
     }
 }
